@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = ">=3.1.6,<3.3"
+python-dotenv = { extras=["cli"], version="*" }
+rapyd-django-modernauth = {editable = true, path = "./../rapyd-django-modernauth"}
+
+[dev-packages]
+pre-commit = "*"
+rope = "*"
+tox = "*"
+tox-asdf = "*"
+bump2version = "*"
+
+[requires]
+python_version = "3.6"
