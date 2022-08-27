@@ -1,7 +1,16 @@
 build:
-	python setup.py sdist
+	python -m build
+
+patch:
+	bump2version patch
+
+minor:
+	bump2version minor
+
+major:
+	bump2version major
 
 upload:
-	python setup.py sdist upload
+	python -m twine upload --verbose dist/*
 
-.PHONY: build upload
+.PHONY: build patch minor major upload
