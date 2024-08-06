@@ -1,5 +1,6 @@
 build:
 	python -m build
+	make lint
 
 patch:
 	bump2version patch
@@ -16,4 +17,7 @@ upload:
 tests:
 	tox
 
-.PHONY: build patch minor major upload tests
+lint:
+	python -m twine check dist/*
+
+.PHONY: build patch minor major upload tests lint
