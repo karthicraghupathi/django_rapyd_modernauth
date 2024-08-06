@@ -13,4 +13,7 @@ major:
 upload:
 	python -m twine upload --verbose dist/*
 
-.PHONY: build patch minor major upload
+tests:
+	tox
+
+.PHONY: build patch minor major upload tests

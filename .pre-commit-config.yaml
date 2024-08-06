@@ -11,7 +11,7 @@ exclude: |
   )
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.6.0
     hooks:
       - id: check-added-large-files
       - id: check-json
@@ -21,18 +21,18 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/pycqa/isort
-    rev: 5.5.3
+    rev: 5.13.2
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 24.8.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: 3.8.3
+    rev: 7.1.1
     hooks:
       - id: flake8
   - repo: https://github.com/d-ryzhikov/pipenv-lock-pre-commit
-    rev: 0.1.0
+    rev: 0.5.0
     hooks:
     - id: pipenv-lock
