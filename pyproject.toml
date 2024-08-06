@@ -1,6 +1,39 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-rapyd-modernauth"
+description = "A Django application that provides a custom User model where the username is the email address."
+version = "0.0.5"
+authors = [
+  { name="Karthic Raghupathi", email="karthicr@gmail.com" },
+]
+readme = "readme.md"
+requires-python = ">=3.11"
+dependencies = [
+  "Django>=4.2,<4.3"
+]
+keywords = ["django", "auth", "custom", "model", "rapyd"]
+license = {file = "LICENSE"}
+classifiers = [
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[project.urls]
+Homepage = "https://github.com/karthicraghupathi/django_rapyd_modernauth"
+Issues = "https://github.com/karthicraghupathi/django_rapyd_modernauth/issues"
+
+[tool.setuptools]
+packages = ["modernauth"]
 
 [tool.black]
 include = '\.pyi?$'

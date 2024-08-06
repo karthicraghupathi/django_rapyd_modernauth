@@ -1,4 +1,5 @@
 build:
+	rm -rf dist
 	python -m build
 	make lint
 
@@ -11,13 +12,16 @@ minor:
 major:
 	bump2version major
 
+testupload:
+	twine upload -r testpypi --verbose dist/*
+
 upload:
-	python -m twine upload --verbose dist/*
+	twine upload -r pypi --verbose dist/*
 
 tests:
 	tox
 
 lint:
-	python -m twine check dist/*
+	twine check dist/*
 
-.PHONY: build patch minor major upload tests lint
+.PHONY: build patch minor major testupload upload tests lint

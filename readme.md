@@ -17,12 +17,12 @@ However, Django's default approach for authentication requires a user provide bo
 **Note:** *Django recommends you do this right at the beginning of the project. Making this change mid-project becomes significantly harder.*
 
 Install the package with:
-```commandline
+```
 pip install django-rapyd-modernauth
 ```
 
 Add `modernauth` to `INSTALLED_APPS`.
-```python
+```
 INSTALLED_APPS = [
 ..
 ..
@@ -31,11 +31,11 @@ INSTALLED_APPS = [
 ```
 
 Set `modernauth.User` as the `AUTH_USER_MODEL`.
-```python
+```
 AUTH_USER_MODEL = "modernauth.User"
 ```
 
 Create models with:
-```commandline
+```
 ./manage.py migrate
 ```
