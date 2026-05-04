@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "django-rapyd-modernauth"
 description = "A Django application that provides a custom User model where the username is the email address."
-version = "0.0.6"
+version = "0.0.7"
 authors = [
   { name="Karthic Raghupathi", email="karthicr@gmail.com" },
 ]
@@ -117,7 +117,7 @@ django_settings_module = "testproject.settings"
 strict_settings = false
 
 [tool.bumpversion]
-current_version = "0.0.6"
+current_version = "0.0.7"
 commit = true
 tag = true
 tag_name = "v{new_version}"
