@@ -47,6 +47,16 @@ Point Django at the custom user model in `settings.py`:
 AUTH_USER_MODEL = "modernauth.User"
 ```
 
+Optionally enable case-insensitive login by adding the `EmailBackend` to your `AUTHENTICATION_BACKENDS`:
+
+```python
+AUTHENTICATION_BACKENDS = [
+    "modernauth.backends.EmailBackend",
+]
+```
+
+This is optional but recommended. Emails are stored lowercased on save, so the backend lowercases the credential at login time and matches against stored values — meaning `Alice@Example.com` and `alice@example.com` resolve to the same account. Without it, Django's default `ModelBackend` will only match if the consumer's login form lowercases the input first.
+
 Create the database tables:
 
 ```bash
@@ -73,6 +83,49 @@ python manage.py createsuperuser
 ```
 
 Login forms, the admin, and `authenticate()` all use `email` as the credential.
+
+Emails are normalized to lowercase whenever a user is created or saved, so the address is the canonical identity. With the `EmailBackend` enabled (see [Installation](#installation)), `authenticate()` lowercases the supplied credential before lookup, making login case-insensitive.
+
+## Migration from 0.0.x
+
+Starting in 0.1.0 the package's behavior changed in two ways:
+
+- `User.save()` (and therefore `create_user` / `create_superuser`) lowercases `email` before writing.
+- The new `modernauth.backends.EmailBackend` lowercases the supplied credential at authentication time, making login case-insensitive when wired into `AUTHENTICATION_BACKENDS`.
+
+The public API surface is unchanged — same model, same manager methods — but consumers upgrading from `0.0.x` should be aware of the points below.
+
+### Existing data is not retroactively normalized
+
+This package does **not** rewrite existing rows. New writes go through the lowercasing path, but rows that already exist with mixed-case local parts (e.g. `Alice@example.com`) stay as-is until the consumer migrates them. If you want the storage invariant to hold across the whole table, you need to run a one-shot data migration in your own project.
+
+### Risk: unique-constraint conflicts
+
+Under the old behavior the unique index on `email` was byte-comparison, so it was possible to have both `Alice@example.com` and `alice@example.com` as separate users. A naive lowercasing migration will fail on the duplicate. **De-dup first**, then migrate.
+
+### Suggested data migration
+
+The sketch below is a starting point, not a turnkey solution. Put it in a data migration in your own project (we don't ship one):
+
+```python
+# Sketch: in your project, create a data migration that lowercases existing emails.
+def lowercase_emails(apps, schema_editor):
+    User = apps.get_model("modernauth", "User")
+    for user in User.objects.all():
+        lowered = user.email.lower()
+        if user.email != lowered:
+            # Caller is responsible for de-duping conflicts before running this.
+            user.email = lowered
+            user.save(update_fields=["email"])
+```
+
+### Rolling back
+
+If you don't want this behavior, pin to the last release before the change:
+
+```bash
+pip install "django-rapyd-modernauth<0.1.0"
+```
 
 ## Contributing
 
