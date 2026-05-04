@@ -1,0 +1,22 @@
+# EditorConfig: https://editorconfig.org
+# Cross-IDE consistent formatting.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+[*.{yml,yaml,toml,json,cfg,ini}]
+indent_size = 2
+
+[*.md]
+# Markdown uses two trailing spaces for hard line breaks; preserve them.
+trim_trailing_whitespace = false
