@@ -48,8 +48,8 @@ dev = [
 Homepage = "https://github.com/karthicraghupathi/django_rapyd_modernauth"
 Issues = "https://github.com/karthicraghupathi/django_rapyd_modernauth/issues"
 
-[tool.setuptools]
-packages = ["modernauth"]
+[tool.setuptools.packages.find]
+include = ["modernauth*"]
 
 [tool.setuptools.package-data]
 modernauth = ["py.typed"]
