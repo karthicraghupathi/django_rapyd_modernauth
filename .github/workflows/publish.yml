@@ -1,11 +1,19 @@
 name: publish
 
 on:
+  # Primary trigger: tag push fires this directly under the user's identity,
+  # which avoids the GITHUB_TOKEN cross-workflow chaining limitation.
+  push:
+    tags: ["v*"]
+  # Fallback trigger: if the GitHub Release is recreated by a user (e.g. for
+  # a manual re-publish recovery), this also fires the workflow.
   release:
     types: [published]
+  # Manual escape hatch.
+  workflow_dispatch:
 
 concurrency:
-  group: publish-${{ github.event.release.tag_name }}
+  group: publish-${{ github.event.release.tag_name || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -21,7 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          # Resolve the right ref regardless of which trigger fired:
+          # - release event: github.event.release.tag_name
+          # - push:tags or workflow_dispatch --ref <tag>: github.ref_name
+          ref: ${{ github.event.release.tag_name || github.ref_name }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@v8.1.0
