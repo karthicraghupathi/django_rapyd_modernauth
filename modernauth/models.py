@@ -16,7 +16,7 @@ class UserManager(BaseUserManager["User"]):
         """Create a new user with the given email and password."""
         if not email:
             raise ValueError("Email is required to create a new user.")
-        email = self.normalize_email(email)
+        email = self.normalize_email(email).lower()
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -59,6 +59,17 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = []
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Lowercase the email before saving.
+
+        Defensive normalization so direct assignments like
+        ``user.email = "Alice@…"; user.save()`` are still stored
+        case-insensitively, even when the manager flow is bypassed.
+        """
+        if self.email:
+            self.email = self.email.lower()
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.email

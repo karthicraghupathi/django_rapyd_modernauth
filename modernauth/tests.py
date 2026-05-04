@@ -45,12 +45,20 @@ class AuthTestCase(TestCase):
         user = User.objects.create_user(email="bob@EXAMPLE.com", password="x")
         self.assertEqual(user.email, "bob@example.com")
 
-    def test_email_local_part_case_is_preserved(self):
-        # Documents the current behavior: only the domain is lowercased; the
-        # local part stays as the user typed it. Two users differing only in
-        # the case of the local part are therefore distinct rows.
+    def test_email_local_part_is_lowercased(self):
+        # The full email (local part + domain) is lowercased on save so that
+        # identity is case-insensitive.
         user = User.objects.create_user(email="Alice@example.com", password="x")
-        self.assertEqual(user.email, "Alice@example.com")
+        self.assertEqual(user.email, "alice@example.com")
+
+    def test_save_lowercases_email_directly_assigned(self):
+        # Defensive: even when the manager flow is bypassed and email is
+        # directly assigned, save() must lowercase it before persisting.
+        user = User.objects.create_user(email="someone@example.com", password="x")
+        user.email = "MIXED@CASE.com"
+        user.save()
+        user.refresh_from_db()
+        self.assertEqual(user.email, "mixed@case.com")
 
     def test_create_user_rejects_missing_email(self):
         with self.assertRaises(ValueError):
@@ -69,6 +77,24 @@ class AuthTestCase(TestCase):
 
     def test_authenticate_with_wrong_password_returns_none(self):
         user = authenticate(email="user@testproject.com", password="WRONG")
+        self.assertIsNone(user)
+
+    def test_authenticate_is_case_insensitive_via_email_backend(self):
+        user = authenticate(email="USER@TESTPROJECT.com", password="pa55w0rd")
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, "user@testproject.com")
+
+    def test_authenticate_with_wrong_password_via_email_backend(self):
+        user = authenticate(email="USER@TESTPROJECT.com", password="WRONG")
+        self.assertIsNone(user)
+
+    def test_authenticate_inactive_user_returns_none(self):
+        inactive = User.objects.create_user(
+            email="inactive@testproject.com", password="pa55w0rd"
+        )
+        inactive.is_active = False
+        inactive.save()
+        user = authenticate(email="Inactive@TestProject.com", password="pa55w0rd")
         self.assertIsNone(user)
 
     def test_create_superuser_requires_is_staff_true(self):

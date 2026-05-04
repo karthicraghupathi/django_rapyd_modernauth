@@ -88,7 +88,7 @@ tox p
 
 # 2. Bump the version (creates the version commit + git tag automatically)
 bump-my-version bump patch       # 0.0.6 → 0.0.7  (bug-fix release)
-bump-my-version bump minor       # 0.0.6 → 0.1.0  (Django LTS support changes, etc.)
+bump-my-version bump minor       # 0.0.6 → 0.1.0  (Django LTS support changes, behavior changes, etc.)
 bump-my-version bump major       # 1.0.0 → 2.0.0  (breaking)
 
 # 3. Push commit + tag
@@ -102,6 +102,8 @@ That's it on the local side. The rest happens on GitHub:
 3. The `publish` workflow fires on the release publication, builds the sdist and wheel via `uv build`, and uploads to PyPI through OIDC trusted publishing.
 
 No API tokens, no manual `twine upload`. Watch the Actions tab to see the cascade.
+
+A `bump minor` is also the right call when the package's *behavior* changes — even if the public API surface is unchanged — because existing consumers need to be aware of the change before upgrading. "Minor" is not just for new features.
 
 `bump-my-version` configuration lives under `[tool.bumpversion]` in `pyproject.toml`. Use `bump-my-version bump <part> --dry-run --verbose` to preview the exact files and lines that would change.
 
