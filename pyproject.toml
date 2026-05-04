@@ -51,21 +51,39 @@ Issues = "https://github.com/karthicraghupathi/django_rapyd_modernauth/issues"
 [tool.setuptools]
 packages = ["modernauth"]
 
-[tool.black]
-include = '\.pyi?$'
-exclude = '''
-/(
-  \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+extend-exclude = [
+  "modernauth/migrations",
+  "testproject",
+]
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "B",    # flake8-bugbear
+  "UP",   # pyupgrade
+  "C90",  # mccabe complexity
+]
+ignore = [
+  "E501",  # line too long (the formatter wraps where it can)
+  "F401",  # imported but unused (sometimes intentional in __init__.py)
+  "F403",  # wildcard imports (Django settings convention)
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.isort]
+known-first-party = ["modernauth", "testproject"]
+section-order = ["future", "standard-library", "django", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort.sections]
+django = ["django"]
 
 [tool.bumpversion]
 current_version = "0.0.6"
