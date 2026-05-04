@@ -41,6 +41,7 @@ dev = [
   "bump-my-version",
   "build",
   "twine",
+  "pre-commit",
 ]
 
 [project.urls]
