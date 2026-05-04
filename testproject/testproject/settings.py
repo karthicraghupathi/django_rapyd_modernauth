@@ -146,6 +146,10 @@ DATABASES = {
 
 AUTH_USER_MODEL = "modernauth.User"
 
+AUTHENTICATION_BACKENDS = [
+    "modernauth.backends.EmailBackend",
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators

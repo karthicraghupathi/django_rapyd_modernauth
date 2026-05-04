@@ -79,6 +79,24 @@ class AuthTestCase(TestCase):
         user = authenticate(email="user@testproject.com", password="WRONG")
         self.assertIsNone(user)
 
+    def test_authenticate_is_case_insensitive_via_email_backend(self):
+        user = authenticate(email="USER@TESTPROJECT.com", password="pa55w0rd")
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, "user@testproject.com")
+
+    def test_authenticate_with_wrong_password_via_email_backend(self):
+        user = authenticate(email="USER@TESTPROJECT.com", password="WRONG")
+        self.assertIsNone(user)
+
+    def test_authenticate_inactive_user_returns_none(self):
+        inactive = User.objects.create_user(
+            email="inactive@testproject.com", password="pa55w0rd"
+        )
+        inactive.is_active = False
+        inactive.save()
+        user = authenticate(email="Inactive@TestProject.com", password="pa55w0rd")
+        self.assertIsNone(user)
+
     def test_create_superuser_requires_is_staff_true(self):
         with self.assertRaises(ValueError):
             User.objects.create_superuser(email="x@x.com", password="x", is_staff=False)
