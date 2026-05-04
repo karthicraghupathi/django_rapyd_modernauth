@@ -1,14 +1,18 @@
+from typing import Any, ClassVar
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     """Model manager for custom User model with no username field."""
 
     use_in_migrations = True
 
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(
+        self, email: str, password: str | None, **extra_fields: Any
+    ) -> "User":
         """Create a new user with the given email and password."""
         if not email:
             raise ValueError("Email is required to create a new user.")
@@ -18,13 +22,17 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(
+        self, email: str, password: str | None = None, **extra_fields: Any
+    ) -> "User":
         """Create a regular user with the given email and password."""
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(
+        self, email: str, password: str | None = None, **extra_fields: Any
+    ) -> "User":
         """Create a super user with the given email and password."""
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
@@ -40,13 +48,17 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     """Custom User model with no username field."""
 
-    username = None
+    username = None  # type: ignore[assignment]
     email = models.EmailField(_("email address"), unique=True)
 
-    objects = UserManager()
+    # Our UserManager subclasses BaseUserManager directly (not the full
+    # UserManager that knows about usernames). django-stubs types
+    # AbstractUser.objects as UserManager[User], which is a different
+    # class than ours - hence the type: ignore.
+    objects: ClassVar[UserManager] = UserManager()  # type: ignore[assignment]
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS: ClassVar[list[str]] = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.email

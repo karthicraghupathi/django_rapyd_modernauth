@@ -42,6 +42,27 @@ jobs:
           TOXENV: ${{ matrix.toxenv }}
         run: uvx tox -e "$TOXENV"
 
+  lint:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Sync project dev dependencies
+        run: uv sync --all-extras
+
+      - name: Provision .env for testproject settings
+        run: echo "DJANGO_SECRET_KEY=ci-test-secret-not-for-production" > .env
+
+      - name: Run pre-commit hooks (ruff + mypy + uv-lock + uv-export)
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
   verify-wheel:
     name: Verify built wheel
     runs-on: ubuntu-latest

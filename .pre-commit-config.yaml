@@ -36,3 +36,17 @@ repos:
           - "--all-extras"
           - "--no-emit-project"
           - "--output-file=requirements-dev.txt"
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        # uv run picks up the project's .venv automatically. The
+        # django-stubs plugin imports testproject.settings, which reads
+        # DJANGO_SECRET_KEY at import time, so we inject a stub value
+        # here so the hook works regardless of whether .env is loaded
+        # in the user's shell.
+        entry: uv run env DJANGO_SECRET_KEY=mypy-stub-secret-not-for-production mypy --config-file pyproject.toml
+        language: system
+        types: [python]
+        pass_filenames: false
+        files: ^modernauth/
