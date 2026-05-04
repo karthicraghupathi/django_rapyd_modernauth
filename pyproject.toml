@@ -56,3 +56,15 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.bumpversion]
+current_version = "0.0.6"
+commit = true
+tag = true
+tag_name = "v{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+
+[[tool.bumpversion.files]]
+filename = "modernauth/__init__.py"
