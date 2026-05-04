@@ -390,3 +390,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,linux,macos,python,pycharm,windows,sublimetext,visualstudiocode,jupyternotebooks
+
+# Project overrides: blanket-ignore IDE configs rather than the selective
+# JetBrains rules in the template above. Single-maintainer library, no
+# value in versioning per-IDE project files.
+.idea/
