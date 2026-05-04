@@ -85,12 +85,11 @@ git clone git@github.com:karthicraghupathi/django_rapyd_modernauth.git
 cd django_rapyd_modernauth
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
-pip install python-dotenv tox bump-my-version build twine
+pip install -e ".[dev]"
 echo "DJANGO_SECRET_KEY=local-dev-secret" > .env
 ```
 
-The `.env` file is required by the bundled test project's settings module (it loads `DJANGO_SECRET_KEY` via `python-dotenv`) and is gitignored. `python-dotenv` is a test-time dependency only — it is not installed by the package itself.
+The `[dev]` extra (defined under `[project.optional-dependencies]` in `pyproject.toml`) installs `python-dotenv`, `tox`, `bump-my-version`, `build`, and `twine` — everything you need to run the tests, cut a release, and upload to PyPI. The `.env` file is required by the bundled test project's settings module (it loads `DJANGO_SECRET_KEY` via `python-dotenv`) and is gitignored.
 
 ### Running tests
 

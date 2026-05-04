@@ -34,6 +34,15 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 
+[project.optional-dependencies]
+dev = [
+  "python-dotenv",
+  "tox",
+  "bump-my-version",
+  "build",
+  "twine",
+]
+
 [project.urls]
 Homepage = "https://github.com/karthicraghupathi/django_rapyd_modernauth"
 Issues = "https://github.com/karthicraghupathi/django_rapyd_modernauth/issues"
