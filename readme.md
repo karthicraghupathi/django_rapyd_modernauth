@@ -129,7 +129,7 @@ pip install "django-rapyd-modernauth<0.1.0"
 
 ## Contributing
 
-Pull requests are welcome — the project is intentionally small, so bug fixes, test improvements, and Django LTS support updates are the most likely to land. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development setup, test workflow, and release process.
+Pull requests are welcome — the project is intentionally small, so bug fixes, test improvements, and Django LTS support updates are the most likely to land. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development setup, test workflow, and release process. See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 For security vulnerabilities, see [SECURITY.md](SECURITY.md) for the private disclosure process. **Do not file a public issue for security bugs.**
 
